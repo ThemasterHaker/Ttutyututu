@@ -32,27 +32,32 @@
         <p>Please wait for <span id="timer" class="timer">5:00</span> before trying again.</p>
     </div>
     <script>
-        const waitTime = 5 * 60 * 1000; // 5 minutes in milliseconds
+        const waitTime = 5 * 60; // 5 minutes in seconds
         let countdownTimer;
 
         countdownTimer = setInterval(updateTimer, 1000);
 
         function updateTimer() {
-            const now = new Date().getTime();
-            const endTime = now + waitTime;
-            const distance = endTime - now;
-
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
             const timerElement = document.getElementById('timer');
-            timerElement.textContent = `${minutes}:${seconds}`;
+            let timer = timerElement.textContent.split(':');
+            let minutes = parseInt(timer[0], 10);
+            let seconds = parseInt(timer[1], 10);
 
-            if (distance < 0) {
-                clearInterval(countdownTimer);
-                // Redirect back to login page
-                window.location.href = 'login.html';
+            // Decrease the timer
+            if (seconds > 0) {
+                seconds--;
+            } else {
+                if (minutes === 0) {
+                    clearInterval(countdownTimer);
+                    // Redirect back to login page
+                    window.location.href = 'login.html';
+                }
+                minutes--;
+                seconds = 59;
             }
+
+            // Display the updated timer
+            timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
     </script>
 </body>
